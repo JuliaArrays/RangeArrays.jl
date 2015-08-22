@@ -1,5 +1,8 @@
 module RangeArrays
 
-# package code goes here
+include("matrix.jl")
+include("raggedmatrix.jl")
+
+export RangeMatrix, RaggedRangeMatrix
 
 end # module
