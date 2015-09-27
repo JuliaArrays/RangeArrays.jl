@@ -33,8 +33,6 @@ function sumlengths(xs::AbstractVector)
     end
     s
 end
-maplength{T<:Range}(xs::AbstractVector{T}) = [length(x) for x in xs]
-maplength(x::Range) = length(x)
 
 Base.length(R::RaggedRangeMatrix) = sumlengths(R.rs)
 Base.size(R::RaggedRangeMatrix) = (maxlengths(R.rs), length(R.rs))
@@ -42,7 +40,7 @@ function Base.size(R::RaggedRangeMatrix, d)
     d == 1 && return RaggedDimension([length(x) for x in R.rs])
     d == 2 && return length(R.rs)
     d > 2 && return 1
-    throw(ArgumentError())
+    throw(ArgumentError("dimension must be > 0"))
 end
 
 # Scalar indexing
