@@ -18,23 +18,13 @@ end
 RaggedRangeMatrix(rs::Range...) = RaggedRangeMatrix(collect(rs)) # TODO: use tuple storage?
 RaggedRangeMatrix{T<:Range}(rs::AbstractVector{T}) = RaggedRangeMatrix{eltype(T), typeof(rs)}(rs)
 
-# Simple devectorization helper functions
-function maxlengths(xs::AbstractVector)
-    m = 0
-    for x in xs
-        m = max(length(x), m)
-    end
-    m
-end
-function sumlengths(xs::AbstractVector)
+function Base.length(R::RaggedRangeMatrix)
     s = 0
-    for x in xs
-        s += length(x)
+    for r in R.rs
+        s += length(r)
     end
     s
 end
-
-Base.length(R::RaggedRangeMatrix) = sumlengths(R.rs)
 Base.size(R::RaggedRangeMatrix) = (RaggedDimension([length(x) for x in R.rs]), length(R.rs))
 
 # Scalar indexing
