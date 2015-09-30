@@ -64,7 +64,6 @@ R = RaggedRangeMatrix(UnitRange{Int}[1:11, 12:18, 19:31, 32:40])
 @test R[2:4, 1:2] == RangeMatrix(2:4, 13:15)
 
 @test size(R, 3) == 1
-@test_throws ArgumentError size(R, -1)
 
 # RepeatedRangeMatrix tests
 R = RepeatedRangeMatrix(1:10, 0:10:30)

@@ -13,7 +13,7 @@ concretely typed.
 """
 immutable RaggedRangeMatrix{T,A} <: AbstractRaggedArray{T,2,1,1}
     rs::A # A <: AbstractVector{_<:Range{T}}
-    # TODO: maybe cache the maximum extents (maxlengths(rs), length(rs))?
+    # TODO: maybe cache the size?
 end
 RaggedRangeMatrix(rs::Range...) = RaggedRangeMatrix(collect(rs)) # TODO: use tuple storage?
 RaggedRangeMatrix{T<:Range}(rs::AbstractVector{T}) = RaggedRangeMatrix{eltype(T), typeof(rs)}(rs)
@@ -35,13 +35,7 @@ function sumlengths(xs::AbstractVector)
 end
 
 Base.length(R::RaggedRangeMatrix) = sumlengths(R.rs)
-Base.size(R::RaggedRangeMatrix) = (maxlengths(R.rs), length(R.rs))
-function Base.size(R::RaggedRangeMatrix, d)
-    d == 1 && return RaggedDimension([length(x) for x in R.rs])
-    d == 2 && return length(R.rs)
-    d > 2 && return 1
-    throw(ArgumentError("dimension must be > 0"))
-end
+Base.size(R::RaggedRangeMatrix) = (RaggedDimension([length(x) for x in R.rs]), length(R.rs))
 
 # Scalar indexing
 Base.getindex(R::RaggedRangeMatrix, i::Int, j::Int) = (checkbounds(R, i, j); ragged_unsafe_getindex(R, i, j))
