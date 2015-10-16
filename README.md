@@ -8,7 +8,6 @@ structure where the columns of the array are generated (on the fly) by Ranges.
 Three different types of range matrices are currently supported:
 * `RangeMatrix`: makes a vector of ranges behave as a matrix; all ranges must be the same length.
 * `RepeatedRangeMatrix`: one range is repeated multiple times at offsets specified in a vector.
-* `RaggedRangeMatrix`: makes a collection of verious-sized ranges behave as a [RaggedArray](http://github.com/mbauman/RaggedArrays.jl).
 
 In all cases, indexing is specialized such that it will return an appropriate RangeArray if it can.
 
@@ -38,19 +37,8 @@ julia> RepeatedRangeMatrix(.1:.1:1.0, [5.,-20.2,3.3])
  5.8  -19.4  4.1
  5.9  -19.3  4.2
  6.0  -19.2  4.3
-
-julia> RR = RaggedRangeMatrix(1:3,3:6,7:12,-2:1)
-6x4 RangeArrays.RaggedRangeMatrix{Int64,Array{UnitRange{Int64},1}}:
-   1       3      7   -2
-   2       4      8   -1
-   3       5      9    0
- #undef    6     10    1
- #undef  #undef  11  #undef
- #undef  #undef  12  #undef
-
-julia> RR[1:3,2:4]
-3x3 RangeArrays.RangeMatrix{Int64,Array{UnitRange{Int64},1}}:
- 3  7  -2
- 4  8  -1
- 5  9   0
 ```
+
+There is a similar structure available in
+[RaggedArrays.jl](http://github.com/mbauman/RaggedArrays.jl), which allows for
+ranges of varying lengths.
