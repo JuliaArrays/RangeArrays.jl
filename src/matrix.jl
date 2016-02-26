@@ -18,7 +18,7 @@ function RangeMatrix{T<:Range}(rs::AbstractVector{T})
     n == 0 && return RangeMatrix{T}(rs, (0, 0))
     m = length(rs[1])
     for j=2:n
-        m == length(rs[j]) || throw(ArgumentError("all UnitRanges must have the same length; expected $m, got $(length(rs[j]))"))
+        m == length(rs[j]) || throw(ArgumentError("all ranges must have the same length; expected $m, got $(length(rs[j]))"))
     end
     RangeMatrix{eltype(T), typeof(rs)}(rs, (m, n))
 end
