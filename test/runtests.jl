@@ -5,7 +5,7 @@ using Base.Test
 
 R = RangeMatrix(UnitRange{Int}[1:10, 11:20, 21:30, 31:40])
 
-@test collect(R) == collect(1:40)
+@test vec(collect(R)) == collect(1:40)
 @test R[1,1] == 1
 
 for i=1:40
@@ -34,7 +34,7 @@ end
 # RepeatedRangeMatrix tests
 R = RepeatedRangeMatrix(1:10, 0:10:30)
 
-@test collect(R) == collect(1:40)
+@test vec(collect(R)) == collect(1:40)
 @test R[1,1] == 1
 
 for i=1:40
