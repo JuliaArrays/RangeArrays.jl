@@ -43,5 +43,5 @@ julia> RR[8:-2:2, end]
 ```
 
 There is a similar structure available in
-[RaggedArrays.jl](http://github.com/mbauman/RaggedArrays.jl), which allows for
+[mbauman/RaggedArrays.jl](http://github.com/mbauman/RaggedArrays.jl), which allows for
 ranges of varying lengths.
