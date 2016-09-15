@@ -1,6 +1,6 @@
 # RangeArrays
 
-[![Build Status](https://travis-ci.org/mbauman/RangeArrays.jl.svg?branch=master)](https://travis-ci.org/mbauman/RangeArrays.jl) [![Coverage Status](https://coveralls.io/repos/mbauman/RangeArrays.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/mbauman/RangeArrays.jl?branch=master)
+[![Build Status](https://travis-ci.org/JuliaArrays/RangeArrays.jl.svg?branch=master)](https://travis-ci.org/JuliaArrays/RangeArrays.jl) [![Build status](https://ci.appveyor.com/api/projects/status/nhlhndm60n7p77m3?svg=true)](https://ci.appveyor.com/project/mbauman/rangearrays-jl) [![Coverage Status](https://coveralls.io/repos/JuliaArrays/RangeArrays.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/JuliaArrays/RangeArrays.jl?branch=master)
 
 The goal of RangeArrays is to provide efficient and convenient array data
 structures where the columns of the arrays are generated (on the fly) by Ranges.
