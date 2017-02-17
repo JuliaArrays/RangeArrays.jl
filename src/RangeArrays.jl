@@ -1,5 +1,7 @@
 module RangeArrays
 
+using Compat
+
 include("matrix.jl")
 include("repeatedrange.jl")
 

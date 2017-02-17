@@ -24,7 +24,7 @@ function RangeMatrix{T<:Range}(rs::AbstractVector{T})
 end
 
 Base.size(R::RangeMatrix) = R.dims
-Base.linearindexing{R<:RangeMatrix}(::Type{R}) = Base.LinearSlow()
+@compat Base.IndexStyle(::Type{<:RangeMatrix}) = IndexCartesian()
 
 # Scalar indexing
 Base.getindex(R::RangeMatrix, i::Int, j::Int) = (checkbounds(R, i, j); Base.unsafe_getindex(R, i, j))

@@ -12,7 +12,7 @@ end
 RepeatedRangeMatrix{T}(r::Range{T}, at::AbstractVector{T}) = RepeatedRangeMatrix{T, typeof(r), typeof(at)}(r, at)
 
 Base.size(R::RepeatedRangeMatrix) = (length(R.r), length(R.at))
-Base.linearindexing{R<:RepeatedRangeMatrix}(::Type{R}) = Base.LinearSlow()
+@compat Base.IndexStyle(::Type{<:RepeatedRangeMatrix}) = IndexCartesian()
 
 # Scalar indexing
 Base.getindex(R::RepeatedRangeMatrix, i::Int, j::Int) = (checkbounds(R, i, j); Base.unsafe_getindex(R, i, j))
