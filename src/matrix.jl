@@ -27,12 +27,27 @@ Base.size(R::RangeMatrix) = R.dims
 @compat Base.IndexStyle(::Type{<:RangeMatrix}) = IndexCartesian()
 
 # Scalar indexing
-Base.getindex(R::RangeMatrix, i::Int, j::Int) = (checkbounds(R, i, j); Base.unsafe_getindex(R, i, j))
-Base.unsafe_getindex(R::RangeMatrix, i::Int, j::Int) = @inbounds return R.rs[j][i]
+@inline function Base.getindex(R::RangeMatrix, i::Int, j::Int)
+    @boundscheck checkbounds(R, i, j);
+    @inbounds return R.rs[j][i]
+end
 
 # For non-scalar indexing, only specialize with inner Ranges and Colons to
 # return Ranges or RangeMatrixes. For everything else, we can use the fallbacks.
-Base.getindex(R::RangeMatrix, I::Union{Range, Colon}, J) = (checkbounds(R, I, J); Base.unsafe_getindex(R, I, J))
-Base.unsafe_getindex(R::RangeMatrix, I::Union{Range, Colon}, j::Real) = @inbounds return R.rs[j][I]
-Base.unsafe_getindex(R::RangeMatrix, I::Union{Range, Colon}, ::Colon) = @inbounds return RangeMatrix([R.rs[j][I] for j=1:length(R.rs)])
-Base.unsafe_getindex(R::RangeMatrix, I::Union{Range, Colon}, J)       = @inbounds return RangeMatrix([R.rs[j][I] for j in J])
+@inline function Base.getindex(R::RangeMatrix, I::Union{Range, Colon}, J)
+    @boundscheck checkbounds(R, I, J)
+    unsafe_getindex(R, I, J)
+end
+@inline unsafe_getindex(R::RangeMatrix, I::Union{Range, Colon}, j::Real) = @inbounds return R.rs[j][I]
+@inline unsafe_getindex(R::RangeMatrix, I::Union{Range, Colon}, ::Colon) = @inbounds return RangeMatrix([R.rs[j][I] for j=1:length(R.rs)])
+@inline unsafe_getindex(R::RangeMatrix, I::Union{Range, Colon}, J)       = @inbounds return RangeMatrix([R.rs[j][I] for j in J])
+
+# We can also optimize bounds checks to only look at each range's endpoints
+function Base.checkindex(::Type{Bool}, inds::AbstractUnitRange, R::RangeMatrix)
+    b = true
+    @inbounds for r in R.rs
+        b &= checkindex(Bool, inds, r[1])
+        b &= checkindex(Bool, inds, r[end])
+    end
+    b
+end
