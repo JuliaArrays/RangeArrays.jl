@@ -59,3 +59,18 @@ end
 @test R[:, 1:2] == RangeMatrix(1:10, 11:20)
 @test R[:, 1:4] == R[:,:] == RangeMatrix(1:10, 11:20, 21:30, 31:40)
 @test R[:, 3:4] == RangeMatrix(21:30, 31:40)
+
+A = 1:100
+@test_throws BoundsError A[RangeMatrix(0:9, 20:29)]
+@test_throws BoundsError A[RangeMatrix(20:29, 0:9)]
+@test_throws BoundsError A[RangeMatrix(20:29, 92:101)]
+@test_throws BoundsError A[RangeMatrix(92:101, 20:29)]
+@test_throws BoundsError A[RangeMatrix(-100:100)]
+@test A[RangeMatrix(1:10, 91:100)] == [1:10 91:100]
+
+@test_throws BoundsError A[RepeatedRangeMatrix(1:10, [-1,33])]
+@test_throws BoundsError A[RepeatedRangeMatrix(1:10, [33,-1])]
+@test_throws BoundsError A[RepeatedRangeMatrix(1:10, [91,33])]
+@test_throws BoundsError A[RepeatedRangeMatrix(1:10, [33,91])]
+@test_throws BoundsError A[RepeatedRangeMatrix(-100:100, [0])]
+@test A[RepeatedRangeMatrix(1:10, [0,90])] == [1:10 91:100]
