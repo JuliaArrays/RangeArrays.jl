@@ -15,12 +15,28 @@ Base.size(R::RepeatedRangeMatrix) = (length(R.r), length(R.at))
 @compat Base.IndexStyle(::Type{<:RepeatedRangeMatrix}) = IndexCartesian()
 
 # Scalar indexing
-Base.getindex(R::RepeatedRangeMatrix, i::Int, j::Int) = (checkbounds(R, i, j); Base.unsafe_getindex(R, i, j))
-Base.unsafe_getindex(R::RepeatedRangeMatrix, i::Int, j::Int) = @inbounds return R.r[i] + R.at[j]
+@inline function Base.getindex(R::RepeatedRangeMatrix, i::Int, j::Int)
+    @boundscheck checkbounds(R, i, j)
+    @inbounds return R.r[i] + R.at[j]
+end
 
 # For non-scalar indexing, only specialize with inner Ranges and Colons to
 # return Ranges or RangeMatrixes. For everything else, we can use the fallbacks.
-Base.getindex(R::RepeatedRangeMatrix, I::Union{Range, Colon}, J) = (checkbounds(R, I, J); Base.unsafe_getindex(R, I, J))
-Base.unsafe_getindex(R::RepeatedRangeMatrix, I::Union{Range, Colon}, j::Real) = @inbounds return R.r[I] + R.at[j]
-Base.unsafe_getindex(R::RepeatedRangeMatrix, I::Union{Range, Colon}, ::Colon) = @inbounds return RepeatedRangeMatrix(R.r[I], R.at[:])
-Base.unsafe_getindex(R::RepeatedRangeMatrix, I::Union{Range, Colon}, J)       = @inbounds return RepeatedRangeMatrix(R.r[I], R.at[J])
+@inline function Base.getindex(R::RepeatedRangeMatrix, I::Union{Range, Colon}, j::Real)
+    @boundscheck checkbounds(R, I, j)
+    @inbounds return R.r[I] + R.at[j]
+end
+@inline function Base.getindex(R::RepeatedRangeMatrix, I::Union{Range, Colon}, J)
+    @boundscheck checkbounds(R, I, J)
+    @inbounds return RepeatedRangeMatrix(R.r[I], R.at[J])
+end
+
+# We can also optimize bounds checks to only look at the range's endpoints
+function Base.checkindex(::Type{Bool}, inds::AbstractUnitRange, R::RepeatedRangeMatrix)
+    b = true
+    @inbounds for a in R.at
+        b &= checkindex(Bool, inds, R.r[1] + a)
+        b &= checkindex(Bool, inds, R.r[end] + a)
+    end
+    b
+end
