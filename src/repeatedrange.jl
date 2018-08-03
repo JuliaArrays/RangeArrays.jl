@@ -46,9 +46,16 @@ end
 
 # For non-scalar indexing, only specialize with inner Ranges and Colons to
 # return Ranges or RangeMatrixes. For everything else, we can use the fallbacks.
-@inline function Base.getindex(R::RepeatedRangeMatrix, I::Union{AbstractRange, Colon}, j::Real)
-    @boundscheck checkbounds(R, I, j)
-    @inbounds return R.r[I] + R.at[j]
+if VERSION < v"0.7.0-alpha"
+    @inline function Base.getindex(R::RepeatedRangeMatrix, I::Union{AbstractRange, Colon}, j::Real)
+        @boundscheck checkbounds(R, I, j)
+        @inbounds return R.r[I] + R.at[j]
+    end
+else
+    @inline function Base.getindex(R::RepeatedRangeMatrix, I::Union{AbstractRange, Colon}, j::Real)
+        @boundscheck checkbounds(R, I, j)
+        @inbounds return R.r[I] .+ R.at[j]
+    end
 end
 @inline function Base.getindex(R::RepeatedRangeMatrix, I::Union{AbstractRange, Colon}, J)
     @boundscheck checkbounds(R, I, J)

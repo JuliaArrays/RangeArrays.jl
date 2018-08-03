@@ -1,5 +1,5 @@
 using RangeArrays
-using Base.Test
+using Compat.Test
 
 # Regular RangeMatrix tests
 
@@ -11,9 +11,7 @@ R = RangeMatrix(UnitRange{Int}[1:10, 11:20, 21:30, 31:40])
 for i=1:40
     @test R[i] == i
 end
-j = 0
-for i in eachindex(R)
-    j+=1
+for (i,j) in zip(eachindex(R), 1:length(R))
     @test R[i] == j
 end
 
@@ -40,9 +38,7 @@ R = RepeatedRangeMatrix(1:10, 0:10:30)
 for i=1:40
     @test R[i] == i
 end
-j = 0
-for i in eachindex(R)
-    j+=1
+for (i,j) in zip(eachindex(R), 1:length(R))
     @test R[i] == j
 end
 
