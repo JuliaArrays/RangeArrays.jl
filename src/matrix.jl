@@ -24,7 +24,7 @@ function RangeMatrix(rs::AbstractVector{T}) where T <: AbstractRange
 end
 
 Base.size(R::RangeMatrix) = R.dims
-@compat Base.IndexStyle(::Type{<:RangeMatrix}) = IndexCartesian()
+Base.IndexStyle(::Type{<:RangeMatrix}) = IndexCartesian()
 
 # Scalar indexing
 @inline function Base.getindex(R::RangeMatrix, i::Int, j::Int)

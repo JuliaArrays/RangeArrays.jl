@@ -13,7 +13,7 @@ RepeatedRangeMatrix(r::AbstractRange{T}, at::AbstractVector{T}) where T =
     RepeatedRangeMatrix{T, typeof(r), typeof(at)}(r, at)
 
 Base.size(R::RepeatedRangeMatrix) = (length(R.r), length(R.at))
-@compat Base.IndexStyle(::Type{<:RepeatedRangeMatrix}) = IndexCartesian()
+Base.IndexStyle(::Type{<:RepeatedRangeMatrix}) = IndexCartesian()
 
 # This coupled iteration over the two fields is 10-20x faster than Cartesian iteration
 @inline function Base.start(R::RepeatedRangeMatrix)
