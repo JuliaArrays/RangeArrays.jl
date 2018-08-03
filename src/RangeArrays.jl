@@ -1,4 +1,4 @@
-__precompile__()
+VERSION < v"0.7.0-rc1" && __precompile__()
 module RangeArrays
 
 using Compat
