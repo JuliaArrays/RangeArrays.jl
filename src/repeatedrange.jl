@@ -15,7 +15,9 @@ RepeatedRangeMatrix(r::AbstractRange{T}, at::AbstractVector{T}) where T =
 Base.size(R::RepeatedRangeMatrix) = (length(R.r), length(R.at))
 Base.IndexStyle(::Type{<:RepeatedRangeMatrix}) = IndexCartesian()
 
+if VERSION < v"0.7.0-DEV.5126"
 # This coupled iteration over the two fields is 10-20x faster than Cartesian iteration
+# TODO: re-implement in the new iteration protocol
 @inline function Base.start(R::RepeatedRangeMatrix)
     is = start(R.r)
     idone = done(R.r, is)
@@ -37,6 +39,7 @@ end
     return (val, (next(R.r, is), (j, js), false))
 end
 @inline Base.done(R::RepeatedRangeMatrix, state) = state[end]
+end
 
 # Scalar indexing
 @inline function Base.getindex(R::RepeatedRangeMatrix, i::Int, j::Int)
