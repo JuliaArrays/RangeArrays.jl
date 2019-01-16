@@ -42,8 +42,8 @@ end
 else 
     
 @inline function Base.iterate(R::RepeatedRangeMatrix)
-    j, js = iterate(R.r)
-    i, is = iterate(R.at)
+    i, is = iterate(R.r)
+    j, js = iterate(R.at)
     return i + j, (is, j, js)
 end
     
