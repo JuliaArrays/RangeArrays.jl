@@ -1,5 +1,5 @@
 using RangeArrays
-using Compat.Test
+using Test
 
 # Regular RangeMatrix tests
 
