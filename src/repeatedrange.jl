@@ -17,7 +17,6 @@ Base.IndexStyle(::Type{<:RepeatedRangeMatrix}) = IndexCartesian()
 
 if VERSION < v"0.7.0-DEV.5126"
 # This coupled iteration over the two fields is 10-20x faster than Cartesian iteration
-# TODO: re-implement in the new iteration protocol
 @inline function Base.start(R::RepeatedRangeMatrix)
     is = start(R.r)
     idone = done(R.r, is)
@@ -39,6 +38,29 @@ end
     return (val, (next(R.r, is), (j, js), false))
 end
 @inline Base.done(R::RepeatedRangeMatrix, state) = state[end]
+    
+else 
+    
+@inline function Base.iterate(R::RepeatedRangeMatrix)
+    i, is = iterate(R.r)
+    j, js = iterate(R.at)
+    return i + j, (is, j, js)
+end
+    
+@inline function Base.iterate(R::RepeatedRangeMatrix, state)
+    is, j, js = state
+    iit = iterate(R.r, is)
+    if iit === nothing
+        jit = iterate(R.at, js)   
+        jit === nothing && return nothing
+        j, js = jit
+        i, is = iterate(R.r)
+    else
+        i, is = iit
+    end
+    return i + j, (is, j, js)
+end    
+    
 end
 
 # Scalar indexing
